@@ -2,13 +2,15 @@ const express=require("express");
 const http=require('http');
 const {Server} =require('socket.io');
 const cors=require('cors');
+const PORT= process.env.PORT || 8000;
+
 
 const app=express();
 const server=http.createServer(app);
 app.use(cors())
 const io=new Server(server,{
     cors:{
-        origin:'https://chatapp-upbk.onrender.com',
+        origin:"https://chatapp-upbk.onrender.com",
         methods:['GET','POST']
     }
 })
@@ -16,12 +18,16 @@ const io=new Server(server,{
 io.on("connection",(socket)=>{
     console.log(`connected user ${socket.id}`);
 
+    socket.on("join_room", (data)=>{
+        socket.join(data)
+    })
+
     socket.on('message' ,(data)=>{
-        socket.broadcast.emit('received_message',data)
+        socket.to(data.room).emit('received_message',data)
     })
 })
 
-const PORT= process.env.PORT || 8000;
+
 
 server.listen(PORT, ()=>{
     console.log(`listening on port${PORT}`)
