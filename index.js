@@ -11,6 +11,7 @@ app.use(cors())
 const io=new Server(server,{
     cors:{
         origin:"https://chatapp-upbk.onrender.com",
+        // origin:"http://localhost:3000",
         methods:['GET','POST']
     }
 })
